@@ -1,0 +1,317 @@
+@import './variables.css';
+@import './animations.css';
+
+/* Page container ensures full viewport and background */
+.reels-page {
+  /* make reels a true fullscreen layer so the document (body) doesn't scroll
+     — the only scrollable element will be `.reels-feed` (prevents dual scrollbars) */
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  overflow: hidden; /* contain all scrolling to .reels-feed */
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+}
+
+/* Loading Container */
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); */
+  z-index: 1000;
+  gap: 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(226, 55, 68, 0.2);
+  border-top-color: #e23744;
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+}
+
+.loading-container p {
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+/* Vertical feed with snap scrolling */
+.reels-feed {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden; /* <- prevent horizontal scroll */
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: pan-y;
+} 
+
+/* Each reel takes full viewport of the reels container (use 100% to avoid adding extra document height) */
+.reel,
+.reel-item {
+  position: relative;
+  height: 100%; /* fill the fixed .reels-page / .reels-feed */
+  width: 100%;
+  scroll-snap-align: start;
+  background: #000;
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out forwards;
+  box-sizing: border-box;
+}
+
+.reel:nth-child(1) { animation-delay: 0.1s; }
+.reel:nth-child(2) { animation-delay: 0.2s; }
+.reel:nth-child(3) { animation-delay: 0.3s; }
+.reel:nth-child(n+4) { animation-delay: 0.4s; }
+
+.reel-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: #000;
+  transition: transform 0.3s ease;
+}
+
+.reel:hover .reel-video {
+  transform: scale(1.02);
+}
+
+/* Overlay: content sits on top of video */
+.reel-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+/* Enhanced gradient for better readability */
+.reel-overlay-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.05) 30%,
+    rgba(0, 0, 0, 0.4) 65%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  animation: fadeIn 0.8s ease-out;
+}
+
+.reel-content {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0) + 80px);
+  display: flex;
+  flex-direction: column;
+  /* clamp the right padding so it never forces horizontal scroll on small screens */
+  padding-right: clamp(20px, 6vw, 80px);
+  gap: 16px;
+  pointer-events: auto;
+  animation: slideInUp 0.6s ease-out 0.2s backwards;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Enhanced Description */
+.reel-description {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);  
+  font-size: 1.1rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 90ch;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.reel-btn {
+  align-self: flex-start;
+  background: linear-gradient(135deg, #e23744, #ff6f7d);
+  color: #fff;
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(226, 55, 68, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.6s ease-out 0.3s backwards;
+}
+
+.reel-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.4s ease;
+}
+
+.reel-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(226, 55, 68, 0.5);
+}
+
+.reel-btn:hover::before {
+  left: 100%;
+}
+
+.reel-btn:active {
+  transform: translateY(-1px);
+}
+
+.reel-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* Desktop tweaks */
+@media (min-width: 768px) {
+  .reel-content {
+    padding: 48px;
+    padding-right: clamp(40px, 6vw, 120px);
+  }
+
+  .reel-description {
+    font-size: 1.2rem;
+    max-width: 70ch;
+  }
+} 
+
+/* Right-side vertical actions */
+.reel-actions {
+  position: absolute;
+  right: 16px;
+  bottom: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  pointer-events: auto;
+  animation: slideInRight 0.6s ease-out 0.3s backwards;
+}
+
+.reel-action,
+.like-btn,
+.save-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  /* background: rgba(0, 0, 0, 0.4); */
+  backdrop-filter: blur(10px);
+  color: #521f1f;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 20px;
+}
+
+.reel-action:hover,
+.like-btn:hover,
+.save-btn:hover {
+  background: rgba(226, 55, 68, 0.3);
+  border-color: rgba(226, 55, 68, 0.6);
+  transform: scale(1.1);
+  box-shadow: 0 12px 32px rgba(226, 55, 68, 0.4);
+}
+
+.reel-action:active,
+.like-btn:active,
+.save-btn:active {
+  transform: scale(0.95);
+}
+
+.reel-action__count {
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.reel-action-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+  animation: slideInRight 0.5s ease-out backwards;
+}
+
+.reel-action-group:nth-child(1) { animation-delay: 0.35s; }
+.reel-action-group:nth-child(2) { animation-delay: 0.4s; }
+.reel-action-group:nth-child(3) { animation-delay: 0.45s; }
+
+/* Empty State */
+.empty-state {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(226, 55, 68, 0.1));  
+  animation: fadeIn 0.6s ease-out;
+}
+
+.empty-state h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Smooth scroll on mobile */
+@media (max-width: 768px) {
+  .reel-content {
+    padding: 20px;
+    padding-right: 28px; /* safe for small screens */
+  }
+
+  .reel-actions {
+    right: 12px;
+    bottom: 90px;
+    gap: 12px;
+  }
+
+  .reel-action,
+  .like-btn,
+  .save-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+}

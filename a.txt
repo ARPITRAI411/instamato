@@ -1,0 +1,15 @@
+whenever we se a file from frontend to experss server ; then express server bydefault can not read that file 
+because  seerver did'nt understand the file format to solve this problem we use multer  package
+use it on routes
+
+
+
+we did'nt store files on server because there we have have acess of ssd and hardisks so we store  the in cloud storage 
+,because cloud storage store our file and ten we can acess whenever we  want cloud storage like cloudynary ,
+ImageKit  so storage req for file and response with url and by that url we can acees the file
+
+
+
+
+
+  

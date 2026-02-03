@@ -31,6 +31,29 @@ a{color:inherit;text-decoration:none}
 :focus{outline:none}
 :focus-visible{box-shadow:0 0 0 4px rgba(226,55,68,0.12);border-radius:8px}
 
+/* INPUTS — global improvements (only input/textarea/select) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  color: #000 !important; /* explicit: make input text black */
+  caret-color: #000;
+  -webkit-text-fill-color: #000;
+  background-clip: padding-box;
+  font-family: var(--font-family-base);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(0,0,0,0.45);
+}
+
+input[disabled], textarea[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .small{font-size:13px;color:var(--muted)}
 .text-muted{color:var(--text-secondary)}
 

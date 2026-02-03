@@ -119,15 +119,23 @@
   border: 1.5px solid var(--border);
   background: var(--bg-primary);
   font-size: var(--font-base);
-  color: var(--text-primary);
+  color: #000; /* ensure input text is black */
+  caret-color: #000;
+  -webkit-text-fill-color: #000;
   transition: all 0.3s ease;
   font-family: inherit;
+  background-clip: padding-box;
 }
 
 .field-group textarea {
   resize: vertical;
   min-height: 120px;
 }
+
+.field-group input::placeholder,
+.field-group textarea::placeholder {
+  color: rgba(0,0,0,0.45);
+} 
 
 .field-group input:focus,
 .field-group textarea:focus {

@@ -141,15 +141,18 @@ body {
   border: 1.5px solid var(--border);
   background: var(--bg-primary);
   font-size: var(--font-base);
-  color: var(--text-primary);
+  color: #000; /* force input text to black for maximum readability */
+  caret-color: #000;
+  -webkit-text-fill-color: #000;
   transition: all 0.3s ease;
   font-family: inherit;
+  background-clip: padding-box;
 }
 
 .field-group input::placeholder,
 .field-group textarea::placeholder {
-  color: var(--text-tertiary);
-}
+  color: rgba(0,0,0,0.45); /* darker placeholder for clarity */
+} 
 
 .field-group input:focus,
 .field-group textarea:focus,
